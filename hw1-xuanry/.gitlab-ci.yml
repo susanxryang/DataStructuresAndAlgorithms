@@ -1,0 +1,58 @@
+image: gradle:jdk8
+
+before_script:
+  - wget -q https://courses.cs.washington.edu/courses/cse373/19sp/files/homework/scripts/hw1/build.gradle -O build.gradle
+
+stages:
+  - compile
+  - test
+
+.shared: &shared
+  only:
+    refs:
+      - branches
+    changes:
+      - src/**/*
+  except:
+    refs:
+      - initial
+
+compile:
+  <<: *shared
+  stage: compile
+  script:
+    - wget -q https://courses.cs.washington.edu/courses/cse373/19sp/files/homework/scripts/hw1/compile.sh -O compile.sh
+    - sh compile.sh
+  tags:
+    - hw1
+    - compile
+
+compile-for-grading:
+  <<: *shared
+  stage: compile
+  script:
+    - wget -q https://courses.cs.washington.edu/courses/cse373/19sp/files/homework/scripts/hw1/compile-for-grading.sh -O compile-for-grading.sh
+    - sh compile-for-grading.sh
+  tags:
+    - hw1
+    - compile
+
+checkstyle:
+  <<: *shared
+  stage: test
+  script:
+    - wget -q https://courses.cs.washington.edu/courses/cse373/19sp/files/homework/scripts/hw1/checkstyle.sh -O checkstyle.sh
+    - sh checkstyle.sh
+  tags:
+    - hw1
+    - checkstyle
+
+test:
+  <<: *shared
+  stage: test
+  script:
+    - wget -q https://courses.cs.washington.edu/courses/cse373/19sp/files/homework/scripts/hw1/test.sh -O test.sh
+    - sh test.sh
+  tags:
+    - hw1
+    - test
